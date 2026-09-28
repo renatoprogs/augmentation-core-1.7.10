@@ -2,33 +2,31 @@
 
 Experimental modular augmentation framework for Minecraft 1.7.10 / Forge 10.13.4.1614.
 
-## 0.0.5 — Resource Network
+## 0.0.6 — Environment provider boundary
 
-WORLD -> IEnvironment -> resource production -> ResourceNetwork -> storage -> consumers
+The environment no longer injects oxygen directly into Body storage.
 
-The resource layer now has an explicit network boundary.
+WORLD -> IEnvironment -> EnvironmentResourceProvider -> ResourceNetwork -> Storage -> Consumers
+
+This is an important architectural boundary: the Body sees a resource network, not the world as a resource source.
 
 ### Current mechanics
 
 - ENERGY and OXYGEN resource types.
 - Per-player Body with persistent NBT state.
-- Environment abstraction separated from the Body.
+- Environment abstraction separated from Body.
 - Normal Overworld atmosphere; non-Overworld dimensions currently use vacuum as a conservative placeholder.
-- ResourceNetwork with providers, consumers and storage.
-- Resource requests pass through the network.
+- Explicit resource providers/consumers and storage.
+- EnvironmentResourceProvider translates environmental availability into a network provider.
 - Organ state tracks integrity, stability and stress.
 - Experimental CyberHeart remains a separate augmentation mechanic.
 
-### Architectural rule
+### Important limitation
 
-The core must not assume that every resource is interchangeable.
+The lungs are currently a physiological function processor, not yet a true oxygen extractor. That is deliberate: the next step is to model extraction efficiency from pressure and lung condition instead of hiding it in the world adapter.
 
-An adapter may expose RF, EU, mana, blood, XP, heat, radiation, neural load or another resource later, but conversion must be explicit rather than implicit.
+### Next step
 
-## Next step
-
-0.0.6 should remove the remaining direct environment extraction from Body by introducing an environment resource provider, then make lungs an actual resource processor/provider and introduce explicit physiological failure thresholds.
-
-## Important
+0.0.7 should introduce explicit physiological failure thresholds and make lung extraction efficiency a function of pressure, integrity and stability.
 
 A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
