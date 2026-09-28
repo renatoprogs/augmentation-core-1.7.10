@@ -19,6 +19,7 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
     @Override public int getIntegrity() { return integrity; }
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
+    @Override public int getMaximumStress() { return profile.getMaximumStress(); }
 
     @Override
     public int getResourceEfficiencyPercent(IResourceType type, float environmentalPressure) {
