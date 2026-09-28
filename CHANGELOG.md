@@ -2,7 +2,16 @@
 
 All notable project changes are recorded here by mod version. Persistence schema changes are tracked independently.
 
-## 0.0.9 — current
+## 0.0.10 — current
+
+### Physiological state progression
+- Added accumulated wear as a separate state from acute stress.
+- Added stability degradation/recovery driven by physiological load.
+- Added integrity degradation driven by accumulated wear.
+- Persisted organ physiological state in NBT.
+- NBT schema advanced from 9 to 10.
+
+## 0.0.9
 
 ### Resource demand and physiology
 - Introduced explicit `IResourceDemand` / `ResourceDemand` allocation data.
