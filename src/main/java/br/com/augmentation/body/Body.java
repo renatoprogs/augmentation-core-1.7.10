@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBody;
 import br.com.augmentation.api.IOrgan;
 import br.com.augmentation.api.IResourceEfficiencySource;
@@ -68,8 +69,27 @@ public final class Body implements IBody {
             context.applyDemand(demand);
         }
 
+        // Phase 1: external resource conversion into the internal blood medium.
+        if (lungs != null) {
+            lungs.tick(context);
+        }
+
+        // Phase 2: allocate the finite internal oxygen medium by priority.
+        List<IBloodDemand> bloodDemands = new ArrayList<IBloodDemand>();
         for (IOrgan organ : organs.values()) {
-            organ.tick(context);
+            organ.collectBloodDemands(context, bloodDemands);
+        }
+
+        blood.allocateOxygen(bloodDemands);
+        for (IBloodDemand demand : bloodDemands) {
+            context.applyBloodDemand(demand);
+        }
+
+        // Phase 3: consume allocated blood oxygen and update organ physiology.
+        for (IOrgan organ : organs.values()) {
+            if (organ != lungs) {
+                organ.tick(context);
+            }
         }
 
         collapseState = evaluateSystemicCollapse();
@@ -101,7 +121,7 @@ public final class Body implements IBody {
     public CollapseState getCollapseState() { return collapseState; }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 8);
+        nbt.setInteger("version", 9);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
@@ -124,4 +144,3 @@ public final class Body implements IBody {
                 ? states[state]
                 : CollapseState.NORMAL;
     }
-}
