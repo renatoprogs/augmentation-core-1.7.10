@@ -2,9 +2,11 @@ package br.com.augmentation.body;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import br.com.augmentation.api.IBody;
 import br.com.augmentation.api.IOrgan;
 import br.com.augmentation.api.environment.IEnvironment;
+import br.com.augmentation.resource.EnvironmentResourceProvider;
 import br.com.augmentation.resource.ResourceNetwork;
 import br.com.augmentation.resource.ResourceStorage;
 import br.com.augmentation.resource.ResourceType;
@@ -14,6 +16,8 @@ public final class Body implements IBody {
     private final Map<String, IOrgan> organs = new HashMap<String, IOrgan>();
     private final ResourceStorage oxygen = new ResourceStorage(ResourceType.OXYGEN, 100, 100);
     private final ResourceStorage energy = new ResourceStorage(ResourceType.ENERGY, 1000, 1000);
+    private final EnvironmentResourceProvider oxygenProvider =
+            new EnvironmentResourceProvider(ResourceType.OXYGEN, 2);
     private int tickCount;
 
     public Body() {
@@ -32,12 +36,13 @@ public final class Body implements IBody {
         network.addStorage(oxygen);
         network.addStorage(energy);
 
+        oxygenProvider.update(environment);
+        network.addProvider(oxygenProvider);
+        network.tick();
+
         BodyContext context = new BodyContext(environment, network);
         context.addStorage(oxygen);
         context.addStorage(energy);
-
-        int atmosphericOxygen = environment.extractResource(ResourceType.OXYGEN, 2);
-        network.produce(ResourceType.OXYGEN, atmosphericOxygen);
 
         for (IOrgan organ : organs.values()) organ.tick(context);
         tickCount++;
@@ -48,7 +53,7 @@ public final class Body implements IBody {
     public int getEnergy() { return energy.getAmount(); }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 3);
+        nbt.setInteger("version", 4);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
