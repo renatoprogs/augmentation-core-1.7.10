@@ -41,6 +41,29 @@ public final class PhysiologyModel {
         return oxygenProcessing(pressureUnits, conditionPercent, p);
     }
 
+    public static int nextWear(int currentWear, int stress, PhysiologyProfile p) {
+        int wear = clamp(currentWear, 0, 100);
+        if (stress >= p.getWearStressThreshold()) {
+            return clamp(wear + p.getWearIncrease(), 0, 100);
+        }
+        return wear;
+    }
+
+    public static int nextStability(int currentStability, int stress,
+            boolean functionSatisfied, PhysiologyProfile p) {
+        int stability = clamp(currentStability, 0, 100);
+        if (stress >= p.getStabilityStressThreshold() || !functionSatisfied) {
+            return clamp(stability - p.getStabilityDecrease(), 0, 100);
+        }
+        return clamp(stability + p.getStabilityRecovery(), 0, 100);
+    }
+
+    public static int nextIntegrity(int currentIntegrity, int wear, PhysiologyProfile p) {
+        int integrity = clamp(currentIntegrity, 0, 100);
+        int target = clamp(100 - clamp(wear, 0, 100) / p.getWearToIntegrityDivisor(), 0, 100);
+        return Math.min(integrity, target);
+    }
+
     private static int clamp(int v, int min, int max) {
         return Math.max(min, Math.min(max, v));
     }
