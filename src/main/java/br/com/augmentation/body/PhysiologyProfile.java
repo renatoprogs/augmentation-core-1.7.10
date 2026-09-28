@@ -1,5 +1,7 @@
 package br.com.augmentation.body;
 
+import br.com.augmentation.resource.ResourceType;
+
 public final class PhysiologyProfile {
     private final int pressureScale, minimumPressure, processingAtFullCondition, processingAtFailure;
     private final int stressPressureThreshold, stressIncrease, stressRecovery, maximumStress;
@@ -22,6 +24,7 @@ public final class PhysiologyProfile {
     public ResourceDemandProfile getOxygenDemand(){return oxygenDemand;}
 
     public static PhysiologyProfile defaultProfile(){
-        return new PhysiologyProfile(100,20,100,0,20,1,1,1000000,null);
+        return new PhysiologyProfile(100,20,100,0,20,1,1,1000000,
+                new ResourceDemandProfile(ResourceType.OXYGEN, 1, 100));
     }
 }
