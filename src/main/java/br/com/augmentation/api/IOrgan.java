@@ -2,14 +2,8 @@ package br.com.augmentation.api;
 
 import java.util.List;
 
-public interface IOrgan {
+public interface IOrgan extends IPhysiologyState {
     String getId();
-    int getIntegrity();
-    int getStability();
-    int getStress();
-    int getWear();
-    void writeToNBT(net.minecraft.nbt.NBTTagCompound nbt);
-    void readFromNBT(net.minecraft.nbt.NBTTagCompound nbt);
     int getMaximumStress();
     void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands);
     void collectBloodDemands(IBodyContext context, List<IBloodDemand> demands);
