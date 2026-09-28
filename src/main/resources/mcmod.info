@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "augmentation",
+    "name": "Augmentation Core",
+    "description": "Experimental modular augmentation core for Minecraft 1.7.10.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["renatoprogs"],
+    "credits": "Experimental architecture derived from research into Cyberware mechanics.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
