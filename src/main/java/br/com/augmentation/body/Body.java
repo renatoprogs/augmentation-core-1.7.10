@@ -5,6 +5,7 @@ import java.util.Map;
 
 import br.com.augmentation.api.IBody;
 import br.com.augmentation.api.IOrgan;
+import br.com.augmentation.api.IResourceEfficiencySource;
 import br.com.augmentation.api.environment.IEnvironment;
 import br.com.augmentation.resource.EnvironmentResourceProvider;
 import br.com.augmentation.resource.ResourceNetwork;
@@ -16,8 +17,7 @@ public final class Body implements IBody {
     private final Map<String, IOrgan> organs = new HashMap<String, IOrgan>();
     private final ResourceStorage oxygen = new ResourceStorage(ResourceType.OXYGEN, 100, 100);
     private final ResourceStorage energy = new ResourceStorage(ResourceType.ENERGY, 1000, 1000);
-    private final EnvironmentResourceProvider oxygenProvider =
-            new EnvironmentResourceProvider(ResourceType.OXYGEN, 2);
+    private final EnvironmentResourceProvider oxygenProvider = new EnvironmentResourceProvider(ResourceType.OXYGEN, 2);
     private int tickCount;
 
     public Body() {
@@ -36,6 +36,14 @@ public final class Body implements IBody {
         network.addStorage(oxygen);
         network.addStorage(energy);
 
+        IOrgan lungs = organs.get("lungs");
+        if (lungs instanceof IResourceEfficiencySource) {
+            IResourceEfficiencySource source = (IResourceEfficiencySource) lungs;
+            oxygenProvider.setEfficiencyPercent(source.getResourceEfficiencyPercent(ResourceType.OXYGEN, environment.getPressure()));
+        } else {
+            oxygenProvider.setEfficiencyPercent(100);
+        }
+
         oxygenProvider.update(environment);
         network.addProvider(oxygenProvider);
         network.tick();
@@ -43,7 +51,6 @@ public final class Body implements IBody {
         BodyContext context = new BodyContext(environment, network);
         context.addStorage(oxygen);
         context.addStorage(energy);
-
         for (IOrgan organ : organs.values()) organ.tick(context);
         tickCount++;
     }
@@ -53,7 +60,7 @@ public final class Body implements IBody {
     public int getEnergy() { return energy.getAmount(); }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 4);
+        nbt.setInteger("version", 5);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
