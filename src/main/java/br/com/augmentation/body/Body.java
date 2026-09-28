@@ -6,6 +6,7 @@ import java.util.Map;
 import br.com.augmentation.api.IBody;
 import br.com.augmentation.api.IOrgan;
 import br.com.augmentation.api.IResourceEfficiencySource;
+import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.environment.IEnvironment;
 import br.com.augmentation.resource.EnvironmentResourceProvider;
 import br.com.augmentation.resource.ResourceNetwork;
@@ -51,6 +52,11 @@ public final class Body implements IBody {
         BodyContext context = new BodyContext(environment, network);
         context.addStorage(oxygen);
         context.addStorage(energy);
+        List<IResourceDemand> demands = new ArrayList<IResourceDemand>();
+        for (IOrgan organ : organs.values()) organ.collectResourceDemands(context, demands);
+        network.allocate(demands);
+        for (IResourceDemand demand : demands) context.applyDemand(demand);
+
         for (IOrgan organ : organs.values()) organ.tick(context);
         tickCount++;
     }
@@ -60,7 +66,7 @@ public final class Body implements IBody {
     public int getEnergy() { return energy.getAmount(); }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 5);
+        nbt.setInteger("version", 6);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
