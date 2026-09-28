@@ -2,6 +2,7 @@ package br.com.augmentation.body;
 
 import java.util.List;
 
+import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
 import br.com.augmentation.api.IResourceDemand;
@@ -40,6 +41,11 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
                 demand.getResourceType(),
                 demand.getRequestedAmount(),
                 demand.getPriority()));
+    }
+
+    @Override
+    public void collectBloodDemands(IBodyContext context, List<IBloodDemand> demands) {
+        // Lungs are the current oxygen producer for the internal blood medium.
     }
 
     @Override
