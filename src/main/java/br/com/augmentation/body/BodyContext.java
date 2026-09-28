@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.augmentation.api.IBodyContext;
+import br.com.augmentation.api.IBloodSystem;
 import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.IResourceNetwork;
 import br.com.augmentation.api.IResourceStorage;
@@ -16,10 +17,12 @@ public final class BodyContext implements IBodyContext {
     private final Map<String, Integer> allocated = new HashMap<String, Integer>();
     private final IEnvironment environment;
     private final IResourceNetwork network;
+    private final IBloodSystem bloodSystem;
 
-    public BodyContext(IEnvironment environment, IResourceNetwork network) {
+    public BodyContext(IEnvironment environment, IResourceNetwork network, IBloodSystem bloodSystem) {
         this.environment = environment;
         this.network = network;
+        this.bloodSystem = bloodSystem;
     }
 
     public void addStorage(IResourceStorage storage) {
@@ -51,6 +54,8 @@ public final class BodyContext implements IBodyContext {
         IResourceStorage storage = resources.get(type.getId());
         return storage == null ? 0 : storage.getAmount();
     }
+
+    @Override public IBloodSystem getBloodSystem() { return bloodSystem; }
 
     @Override public float getPressure() { return environment.getPressure(); }
     @Override public float getTemperature() { return environment.getTemperature(); }
