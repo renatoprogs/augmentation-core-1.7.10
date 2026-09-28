@@ -83,7 +83,7 @@ public final class Body implements IBody {
                     organ.getStress(),
                     organ.getStability(),
                     organ.getIntegrity(),
-                    1000000);
+                    organ.getMaximumStress());
 
             if (state.ordinal() > result.ordinal()) {
                 result = state;
