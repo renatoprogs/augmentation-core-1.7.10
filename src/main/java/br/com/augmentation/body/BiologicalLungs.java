@@ -4,9 +4,13 @@ import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
 
 public final class BiologicalLungs implements IOrgan {
+    private final PhysiologyProfile profile;
     private int integrity = 100;
     private int stability = 100;
     private int stress;
+
+    public BiologicalLungs() { this(PhysiologyProfile.defaultProfile()); }
+    public BiologicalLungs(PhysiologyProfile profile) { this.profile = profile; }
 
     @Override public String getId() { return "lungs"; }
     @Override public int getIntegrity() { return integrity; }
@@ -15,12 +19,11 @@ public final class BiologicalLungs implements IOrgan {
 
     @Override
     public void tick(IBodyContext context) {
-        int pressure = Math.round(context.getPressure() * 100.0f);
-        int processing = Math.max(0, Math.min(100, pressure));
+        int pressure = PhysiologyModel.pressureUnits(context.getPressure(), profile);
+        int condition = PhysiologyModel.conditionPercent(integrity, stability);
+        int processing = PhysiologyModel.oxygenProcessing(pressure, condition, profile);
         context.provideFunction("oxygen_processing", processing);
         context.provideFunction("oxygen_storage", 50);
-
-        if (pressure < 20) stress = Math.min(1000000, stress + 1);
-        else if (stress > 0) stress--;
+        stress = PhysiologyModel.nextStress(stress, pressure, profile);
     }
 }
