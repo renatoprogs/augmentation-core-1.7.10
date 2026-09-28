@@ -152,3 +152,23 @@ Blood oxygen is finite. Each organ declares an internal oxygen demand with a pri
 
 This is intentionally limited to oxygen. Nutrients, waste, temperature, pressure and volume remain future extensions until the oxygen conservation loop is validated.
 
+
+
+## Oxygen cycle audit
+
+The current discrete model was checked as four regimes:
+
+| Regime | External O₂ | Blood O₂ | Organ response |
+|---|---:|---:|---|
+| Normal | 2/tick | 2 produced, 2 consumed | no stress accumulation |
+| Partial | 1/tick | demand exceeds production after the external reserve is depleted | deficits propagate to stress |
+| Zero | 0/tick | blood eventually reaches 0 | lung, brain and heart accumulate stress |
+| Recovery | restored to 2/tick | blood replenishes each tick | stress decreases gradually |
+
+The current body starts with 100 units in the external O₂ storage and the lungs consume 2 units/tick. Therefore a zero-O₂ environment does **not** produce an immediate deficit: the reserve lasts 50 ticks. This is an explicit storage effect, not a failure of the blood model.
+
+Once the reserve is exhausted, a sustained deficit increments stress by the configured physiological rate. With maximum stress 100 and thresholds at 25/60/90%, the model reaches STRAIN at 25 deficit ticks, FAILURE at 60, and COLLAPSE at 90. These values are simulation thresholds, not biological claims.
+
+Recovery is deliberately not instantaneous. Restored supply prevents new stress and applies the configured recovery rate, allowing the system to exhibit hysteresis between failure and recovery.
+
+A critical correction was also made: lung stress now responds to **oxygen resource deficit**, rather than pressure alone. Without this correction, an oxygen-free environment at normal pressure could incorrectly allow the lungs to recover while supplying no oxygen.
