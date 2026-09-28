@@ -2,6 +2,8 @@ package br.com.augmentation.body;
 
 import java.util.List;
 
+import net.minecraft.nbt.NBTTagCompound;
+
 import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
@@ -16,6 +18,7 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
     private int integrity = 100;
     private int stability = 100;
     private int stress;
+    private int wear;
 
     public BiologicalLungs() { this(PhysiologyProfile.defaultLungProfile()); }
     public BiologicalLungs(PhysiologyProfile profile) { this.profile = profile; }
@@ -24,6 +27,7 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
     @Override public int getIntegrity() { return integrity; }
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
+    @Override public int getWear() { return wear; }
     @Override public int getMaximumStress() { return profile.getMaximumStress(); }
 
     @Override
@@ -59,10 +63,30 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
         int processing = PhysiologyModel.oxygenProcessing(pressure, condition, profile);
         context.provideFunction("oxygen_processing", processing);
         context.provideFunction("oxygen_storage", context.getBloodSystem().getOxygen());
+        boolean functionSatisfied = oxygen == demand.getRequestedAmount();
         stress = PhysiologyModel.nextStress(
                 stress,
                 pressure,
-                oxygen == demand.getRequestedAmount(),
+                functionSatisfied,
                 profile);
+        wear = PhysiologyModel.nextWear(wear, stress, profile);
+        stability = PhysiologyModel.nextStability(stability, stress, functionSatisfied, profile);
+        integrity = PhysiologyModel.nextIntegrity(integrity, wear, profile);
     }
+    @Override
+    public void writeToNBT(NBTTagCompound nbt) {
+        nbt.setInteger("integrity", integrity);
+        nbt.setInteger("stability", stability);
+        nbt.setInteger("stress", stress);
+        nbt.setInteger("wear", wear);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound nbt) {
+        integrity = Math.max(0, Math.min(100, nbt.getInteger("integrity")));
+        stability = Math.max(0, Math.min(100, nbt.getInteger("stability")));
+        stress = Math.max(0, Math.min(profile.getMaximumStress(), nbt.getInteger("stress")));
+        wear = Math.max(0, Math.min(100, nbt.getInteger("wear")));
+    }
+
 }
