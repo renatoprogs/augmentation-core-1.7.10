@@ -1,16 +1,30 @@
 package br.com.augmentation.body;
+
+import java.util.List;
+
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
+import br.com.augmentation.api.IResourceDemand;
+import br.com.augmentation.resource.ResourceDemand;
 import br.com.augmentation.resource.ResourceType;
+
 public final class BiologicalBrain implements IOrgan {
     private int integrity = 100;
     private int stability = 100;
     private int stress;
+
     @Override public String getId() { return "brain"; }
     @Override public int getIntegrity() { return integrity; }
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
-    @Override public void tick(IBodyContext context) {
+
+    @Override
+    public void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands) {
+        demands.add(new ResourceDemand(ResourceType.OXYGEN, 1, 100));
+    }
+
+    @Override
+    public void tick(IBodyContext context) {
         int oxygen = context.requestResource(ResourceType.OXYGEN, 1);
         int pressure = Math.round(context.getPressure() * 100.0f);
         int function = oxygen == 1 && pressure >= 20 ? 100 : 0;
