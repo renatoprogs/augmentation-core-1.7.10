@@ -1,9 +1,13 @@
 package br.com.augmentation.body;
 
+import java.util.List;
+
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
+import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.IResourceEfficiencySource;
 import br.com.augmentation.api.IResourceType;
+import br.com.augmentation.resource.ResourceDemand;
 import br.com.augmentation.resource.ResourceType;
 
 public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource {
@@ -30,12 +34,25 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
     }
 
     @Override
+    public void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands) {
+        ResourceDemandProfile demand = profile.getOxygenDemand();
+        demands.add(new ResourceDemand(
+                demand.getResourceType(),
+                demand.getRequestedAmount(),
+                demand.getPriority()));
+    }
+
+    @Override
     public void tick(IBodyContext context) {
+        ResourceDemandProfile demand = profile.getOxygenDemand();
+        int oxygen = context.requestResource(demand.getResourceType(), demand.getRequestedAmount());
+        context.getBloodSystem().addOxygen(oxygen);
+
         int pressure = PhysiologyModel.pressureUnits(context.getPressure(), profile);
         int condition = PhysiologyModel.conditionPercent(integrity, stability);
         int processing = PhysiologyModel.oxygenProcessing(pressure, condition, profile);
         context.provideFunction("oxygen_processing", processing);
-        context.provideFunction("oxygen_storage", 50);
+        context.provideFunction("oxygen_storage", context.getBloodSystem().getOxygen());
         stress = PhysiologyModel.nextStress(stress, pressure, profile);
     }
 }
