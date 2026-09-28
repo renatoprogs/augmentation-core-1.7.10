@@ -8,7 +8,7 @@
     "url": "",
     "updateUrl": "",
     "authorList": ["renatoprogs"],
-    "credits": "Experimental architecture derived from research into Cyberware mechanics.",
+    "credits": "Independent 1.7.10 reimplementation/adaptation; research reference: Cyberware by Flaxbeard (MIT).",
     "logoFile": "",
     "screenshots": [],
     "dependencies": []
