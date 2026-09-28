@@ -121,12 +121,20 @@ public final class Body implements IBody {
     public CollapseState getCollapseState() { return collapseState; }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 9);
+        nbt.setInteger("version", 10);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
         nbt.setInteger("blood_oxygen", blood.getOxygen());
         nbt.setInteger("collapse_state", collapseState.ordinal());
+
+        NBTTagCompound organsNbt = new NBTTagCompound();
+        for (Map.Entry<String, IOrgan> entry : organs.entrySet()) {
+            NBTTagCompound organNbt = new NBTTagCompound();
+            entry.getValue().writeToNBT(organNbt);
+            organsNbt.setTag(entry.getKey(), organNbt);
+        }
+        nbt.setTag("organs", organsNbt);
     }
 
     @Override public void readFromNBT(NBTTagCompound nbt) {
@@ -137,6 +145,15 @@ public final class Body implements IBody {
         energy.insert(nbt.getInteger("energy"));
         blood.consumeOxygen(blood.getOxygen());
         blood.addOxygen(nbt.getInteger("blood_oxygen"));
+
+        if (nbt.hasKey("organs", 10)) {
+            NBTTagCompound organsNbt = nbt.getCompoundTag("organs");
+            for (Map.Entry<String, IOrgan> entry : organs.entrySet()) {
+                if (organsNbt.hasKey(entry.getKey(), 10)) {
+                    entry.getValue().readFromNBT(organsNbt.getCompoundTag(entry.getKey()));
+                }
+            }
+        }
 
         int state = nbt.getInteger("collapse_state");
         CollapseState[] states = CollapseState.values();
