@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.augmentation.api.IBodyContext;
+import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBloodSystem;
 import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.IResourceNetwork;
@@ -15,6 +16,7 @@ public final class BodyContext implements IBodyContext {
     private final Map<String, Integer> functions = new HashMap<String, Integer>();
     private final Map<String, IResourceStorage> resources = new HashMap<String, IResourceStorage>();
     private final Map<String, Integer> allocated = new HashMap<String, Integer>();
+    private final Map<String, Integer> bloodAllocated = new HashMap<String, Integer>();
     private final IEnvironment environment;
     private final IResourceNetwork network;
     private final IBloodSystem bloodSystem;
@@ -34,6 +36,10 @@ public final class BodyContext implements IBodyContext {
         Integer old = allocated.get(id);
         int current = old == null ? 0 : old.intValue();
         allocated.put(id, Integer.valueOf(current + demand.getProvidedAmount()));
+    }
+
+    public void applyBloodDemand(IBloodDemand demand) {
+        bloodAllocated.put(demand.getConsumerId(), Integer.valueOf(demand.getProvidedOxygen()));
     }
 
     @Override public void provideFunction(String function, int strength) {
@@ -56,6 +62,12 @@ public final class BodyContext implements IBodyContext {
     }
 
     @Override public IBloodSystem getBloodSystem() { return bloodSystem; }
+
+    @Override
+    public int getBloodOxygen(String consumerId) {
+        Integer value = bloodAllocated.get(consumerId);
+        return value == null ? 0 : value.intValue();
+    }
 
     @Override public float getPressure() { return environment.getPressure(); }
     @Override public float getTemperature() { return environment.getTemperature(); }
