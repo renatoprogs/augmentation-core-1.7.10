@@ -2,8 +2,11 @@ package br.com.augmentation.body;
 
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
+import br.com.augmentation.api.IResourceEfficiencySource;
+import br.com.augmentation.api.IResourceType;
+import br.com.augmentation.resource.ResourceType;
 
-public final class BiologicalLungs implements IOrgan {
+public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource {
     private final PhysiologyProfile profile;
     private int integrity = 100;
     private int stability = 100;
@@ -16,6 +19,14 @@ public final class BiologicalLungs implements IOrgan {
     @Override public int getIntegrity() { return integrity; }
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
+
+    @Override
+    public int getResourceEfficiencyPercent(IResourceType type, float environmentalPressure) {
+        if (!ResourceType.OXYGEN.getId().equals(type.getId())) return 0;
+        int pressure = PhysiologyModel.pressureUnits(environmentalPressure, profile);
+        int condition = PhysiologyModel.conditionPercent(integrity, stability);
+        return PhysiologyModel.extractionEfficiency(pressure, condition, profile);
+    }
 
     @Override
     public void tick(IBodyContext context) {
