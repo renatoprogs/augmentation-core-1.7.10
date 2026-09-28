@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import br.com.augmentation.api.IResourceConsumer;
+import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.IResourceNetwork;
 import br.com.augmentation.api.IResourceProvider;
 import br.com.augmentation.api.IResourceStorage;
@@ -59,6 +60,24 @@ public final class ResourceNetwork implements IResourceNetwork {
             if (remaining == 0) break;
         }
         return extracted;
+    }
+
+    @Override
+    public void allocate(List<IResourceDemand> demands) {
+        if (demands == null || demands.isEmpty()) return;
+
+        List<IResourceDemand> ordered = new ArrayList<IResourceDemand>(demands);
+        Collections.sort(ordered, new Comparator<IResourceDemand>() {
+            @Override public int compare(IResourceDemand a, IResourceDemand b) {
+                return b.getPriority() - a.getPriority();
+            }
+        });
+
+        for (IResourceDemand demand : ordered) {
+            int provided = request(demand.getResourceType(),
+                    demand.getRequestedAmount(), demand.getPriority());
+            demand.setProvidedAmount(provided);
+        }
     }
 
     public List<IResourceConsumer> getConsumersByPriority() {
