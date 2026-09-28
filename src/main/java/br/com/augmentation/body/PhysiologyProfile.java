@@ -27,17 +27,17 @@ public final class PhysiologyProfile {
     public ResourceDemandProfile getOxygenDemand(){return oxygenDemand;}
 
     public static PhysiologyProfile defaultProfile(){
-        return new PhysiologyProfile(100,20,100,0,20,1,1,1000000,100,0,
+        return new PhysiologyProfile(100,20,100,0,20,1,1,100,100,0,
                 new ResourceDemandProfile(ResourceType.OXYGEN, 1, 100));
     }
 
     public static PhysiologyProfile defaultLungProfile(){
-        return new PhysiologyProfile(100,20,100,0,20,1,1,1000000,100,0,
+        return new PhysiologyProfile(100,20,100,0,20,1,1,100,100,0,
                 new ResourceDemandProfile(ResourceType.OXYGEN, 2, 110));
     }
 
     public static PhysiologyProfile defaultHeartProfile(){
-        return new PhysiologyProfile(100,20,100,0,20,1,1,1000000,100,0,
+        return new PhysiologyProfile(100,20,100,0,20,1,1,100,100,0,
                 new ResourceDemandProfile(ResourceType.OXYGEN, 1, 90));
     }
 }
