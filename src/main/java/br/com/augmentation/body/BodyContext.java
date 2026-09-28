@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.augmentation.api.IBodyContext;
+import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.IResourceNetwork;
 import br.com.augmentation.api.IResourceStorage;
 import br.com.augmentation.api.IResourceType;
@@ -12,6 +13,7 @@ import br.com.augmentation.api.environment.IEnvironment;
 public final class BodyContext implements IBodyContext {
     private final Map<String, Integer> functions = new HashMap<String, Integer>();
     private final Map<String, IResourceStorage> resources = new HashMap<String, IResourceStorage>();
+    private final Map<String, Integer> allocated = new HashMap<String, Integer>();
     private final IEnvironment environment;
     private final IResourceNetwork network;
 
@@ -24,6 +26,10 @@ public final class BodyContext implements IBodyContext {
         resources.put(storage.getType().getId(), storage);
     }
 
+    public void applyDemand(IResourceDemand demand) {
+        allocated.put(demand.getResourceType().getId(), Integer.valueOf(demand.getProvidedAmount()));
+    }
+
     @Override public void provideFunction(String function, int strength) {
         Integer old = functions.get(function);
         if (old == null) old = Integer.valueOf(0);
@@ -31,7 +37,11 @@ public final class BodyContext implements IBodyContext {
     }
 
     @Override public int requestResource(IResourceType type, int amount) {
-        return network.request(type, amount, 0);
+        Integer available = allocated.get(type.getId());
+        if (available == null) return 0;
+        int used = Math.min(Math.max(0, amount), available.intValue());
+        allocated.put(type.getId(), Integer.valueOf(available.intValue() - used));
+        return used;
     }
 
     @Override public int getResource(IResourceType type) {
