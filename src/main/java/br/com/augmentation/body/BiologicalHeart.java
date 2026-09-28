@@ -9,6 +9,8 @@ import br.com.augmentation.resource.ResourceDemand;
 import br.com.augmentation.resource.ResourceType;
 
 public final class BiologicalHeart implements IOrgan {
+    private final ResourceDemandProfile oxygenDemand =
+            new ResourceDemandProfile(ResourceType.OXYGEN, 1, 90);
     private int integrity = 100;
     private int stability = 100;
     private int stress;
@@ -20,13 +22,15 @@ public final class BiologicalHeart implements IOrgan {
 
     @Override
     public void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands) {
-        demands.add(new ResourceDemand(ResourceType.OXYGEN, 1, 90));
+        demands.add(new ResourceDemand(oxygenDemand.getResourceType(),
+                oxygenDemand.getRequestedAmount(), oxygenDemand.getPriority()));
     }
 
     @Override
     public void tick(IBodyContext context) {
-        int oxygen = context.requestResource(ResourceType.OXYGEN, 1);
-        int function = oxygen == 1 ? 100 : 0;
+        int oxygen = context.requestResource(oxygenDemand.getResourceType(),
+                oxygenDemand.getRequestedAmount());
+        int function = oxygen == oxygenDemand.getRequestedAmount() ? 100 : 0;
         context.provideFunction("energy_distribution", function);
         if (function == 0) stress = Math.min(1000000, stress + 1);
         else if (stress > 0) stress--;
