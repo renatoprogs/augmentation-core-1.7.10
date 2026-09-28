@@ -36,3 +36,21 @@ The result is expressed as a percentage and applied to the environmental resourc
 This is an experimental gameplay model, not a biological claim.
 
 A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
+
+## Licensing and attribution
+
+This project is released under the MIT License.
+
+The project is an independent Minecraft 1.7.10 reimplementation/adaptation. Its
+architecture and code are being rewritten for Forge 1.7.10 rather than copied as
+a version-for-version port of Cyberware.
+
+The design research uses Flaxbeard's **Cyberware** project as an upstream reference
+for documented augmentation mechanics and concepts. Cyberware was released under
+the MIT License and is Copyright (c) 2016 Flaxbeard.
+
+Original project:
+- https://github.com/Flaxbeard/Cyberware
+
+The MIT attribution is retained in this repository's LICENSE file. This project
+does not imply endorsement by Flaxbeard or the original Cyberware team.
