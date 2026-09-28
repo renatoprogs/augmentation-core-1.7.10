@@ -1,25 +1,34 @@
 # Augmentation Core 1.7.10
 
-Experimental framework for rebuilding the Cyberware mechanics as a modular augmentation core on Minecraft 1.7.10 / Forge 10.13.4.1614.
+Experimental modular augmentation framework for Minecraft 1.7.10 / Forge 10.13.4.1614.
 
-## Current state — 0.0.4
+## 0.0.5 — Resource Network
 
-- Resource API: ENERGY and OXYGEN.
-- Per-player Body and persistent resource state.
+WORLD -> IEnvironment -> resource production -> ResourceNetwork -> storage -> consumers
+
+The resource layer now has an explicit network boundary.
+
+### Current mechanics
+
+- ENERGY and OXYGEN resource types.
+- Per-player Body with persistent NBT state.
 - Environment abstraction separated from the Body.
-- Deterministic atmosphere model: normal, thin, vacuum.
-- Forge 1.7.10 environment adapter.
-- First experimental CyberHeart augmentation.
-- Java source level 1.7.
+- Normal Overworld atmosphere; non-Overworld dimensions currently use vacuum as a conservative placeholder.
+- ResourceNetwork with providers, consumers and storage.
+- Resource requests pass through the network.
+- Organ state tracks integrity, stability and stress.
+- Experimental CyberHeart remains a separate augmentation mechanic.
 
-This is **not yet a blind port of Cyberware**. The original Cyberware mechanics are being reconstructed as testable modules.
+### Architectural rule
 
-## Architecture
+The core must not assume that every resource is interchangeable.
 
-WORLD → IEnvironment → Atmosphere → Resource layer → Body → organs/augmentations → functions/stress
+An adapter may expose RF, EU, mana, blood, XP, heat, radiation, neural load or another resource later, but conversion must be explicit rather than implicit.
 
-The next target is the resource network and gradual physiological failure model.
+## Next step
+
+0.0.6 should remove the remaining direct environment extraction from Body by introducing an environment resource provider, then make lungs an actual resource processor/provider and introduce explicit physiological failure thresholds.
 
 ## Important
 
-The project is experimental. A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
+A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
