@@ -80,6 +80,19 @@ This is an experimental gameplay model, not a biological claim.
 
 A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
 
+
+## Versioning
+
+The project version and the persisted NBT schema version are tracked separately.
+
+- **Mod version:** `0.0.9` (declared in `build.gradle` and expanded into `mcmod.info`).
+- **Minecraft target:** `1.7.10` / Forge `10.13.4.1614`.
+- **NBT schema:** `9` (`Body.writeToNBT()`), which identifies the persistence layout and is **not** the mod release number.
+- A change that alters the public/runtime contract should receive a new mod version before the next feature is merged.
+- A persistence-layout change should increment the NBT schema independently and include a migration/compatibility decision in the same change.
+
+This keeps release tracking, Minecraft/Forge compatibility and save-data compatibility from being conflated.
+
 ## Licensing and attribution
 
 This project is released under the MIT License.
@@ -99,7 +112,7 @@ The MIT attribution is retained in this repository's LICENSE file. This project
 does not imply endorsement by Flaxbeard or the original Cyberware team.
 
 
-## 0.0.9.x — physiological collapse
+## 0.0.9 — physiological collapse
 
 The physiology layer now distinguishes four experimental systemic states:
 
