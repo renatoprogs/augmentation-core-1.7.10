@@ -2,8 +2,6 @@ package br.com.augmentation.body;
 
 import java.util.List;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
@@ -29,6 +27,10 @@ public final class BiologicalHeart implements IOrgan {
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
     @Override public int getWear() { return wear; }
+    @Override public void setIntegrity(int value) { integrity = clamp(value); }
+    @Override public void setStability(int value) { stability = clamp(value); }
+    @Override public void setStress(int value) { stress = Math.max(0, Math.min(profile.getMaximumStress(), value)); }
+    @Override public void setWear(int value) { wear = clamp(value); }
     @Override public int getMaximumStress() { return profile.getMaximumStress(); }
 
     @Override
@@ -62,20 +64,8 @@ public final class BiologicalHeart implements IOrgan {
         stability = PhysiologyModel.nextStability(stability, stress, functionSatisfied, profile);
         integrity = PhysiologyModel.nextIntegrity(integrity, wear, profile);
     }
-    @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("integrity", integrity);
-        nbt.setInteger("stability", stability);
-        nbt.setInteger("stress", stress);
-        nbt.setInteger("wear", wear);
-    }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt) {
-        integrity = Math.max(0, Math.min(100, nbt.getInteger("integrity")));
-        stability = Math.max(0, Math.min(100, nbt.getInteger("stability")));
-        stress = Math.max(0, Math.min(profile.getMaximumStress(), nbt.getInteger("stress")));
-        wear = Math.max(0, Math.min(100, nbt.getInteger("wear")));
+    private static int clamp(int value) {
+        return Math.max(0, Math.min(100, value));
     }
-
 }
