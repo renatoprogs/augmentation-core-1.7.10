@@ -7,6 +7,7 @@ public interface IOrgan {
     int getIntegrity();
     int getStability();
     int getStress();
+    int getMaximumStress();
     void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands);
     void tick(IBodyContext context);
 }
