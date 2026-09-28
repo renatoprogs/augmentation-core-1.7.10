@@ -15,5 +15,8 @@ public final class PhysiologyModel {
         if(pressureUnits<p.getStressPressureThreshold()) return clamp(stress+p.getStressIncrease(),0,p.getMaximumStress());
         return clamp(stress-p.getStressRecovery(),0,p.getMaximumStress());
     }
+    public static int extractionEfficiency(int pressureUnits,int conditionPercent,PhysiologyProfile p){
+        return oxygenProcessing(pressureUnits,conditionPercent,p);
+    }
     private static int clamp(int v,int min,int max){return Math.max(min,Math.min(max,v));}
 }
