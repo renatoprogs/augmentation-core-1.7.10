@@ -101,7 +101,7 @@ public final class Body implements IBody {
     public CollapseState getCollapseState() { return collapseState; }
 
     @Override public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("version", 7);
+        nbt.setInteger("version", 8);
         nbt.setInteger("tick_count", tickCount);
         nbt.setInteger("oxygen", oxygen.getAmount());
         nbt.setInteger("energy", energy.getAmount());
