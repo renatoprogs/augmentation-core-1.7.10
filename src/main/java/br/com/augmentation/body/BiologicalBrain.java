@@ -35,12 +35,20 @@ public final class BiologicalBrain implements IOrgan {
 
     @Override
     public void tick(IBodyContext context) {
-        int requested = profile.getOxygenDemand().getRequestedAmount();
-        int oxygen = context.requestResource(profile.getOxygenDemand().getResourceType(), requested);
+        ResourceDemandProfile demand = profile.getOxygenDemand();
+        int oxygen = context.requestResource(demand.getResourceType(), demand.getRequestedAmount());
         int pressure = Math.round(context.getPressure() * profile.getPressureScale());
-        int function = oxygen == requested && pressure >= profile.getStressPressureThreshold() ? 100 : 0;
+        int function = oxygen == demand.getRequestedAmount()
+                && pressure >= profile.getStressPressureThreshold()
+                ? profile.getFunctionAtFullCondition()
+                : profile.getFunctionAtFailure();
+
         context.provideFunction("neural_processing", function);
-        if (function == 0) stress = Math.min(profile.getMaximumStress(), stress + profile.getStressIncrease());
-        else if (stress > 0) stress = Math.max(0, stress - profile.getStressRecovery());
+
+        if (function == profile.getFunctionAtFailure()) {
+            stress = Math.min(profile.getMaximumStress(), stress + profile.getStressIncrease());
+        } else if (stress > 0) {
+            stress = Math.max(0, stress - profile.getStressRecovery());
+        }
     }
 }
