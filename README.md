@@ -113,3 +113,14 @@ CollapseModel is a pure calculation layer. It combines stress, integrity and sta
 The current thresholds are gameplay placeholders for testing the state-space transition and are not intended as biological claims.
 
 Systemic body state is derived from the most severe current organ state and persisted in NBT. This is intentionally a small first step; blood/internal transport will be introduced separately rather than making blood equivalent to external resources.
+
+
+## Internal blood medium
+
+A minimal `IBloodSystem`/`BloodSystem` layer now separates internal transport from external resources. Lungs request environmental oxygen through the ResourceNetwork and convert the supplied amount into blood oxygen. Brain and heart consume oxygen from blood instead of directly consuming the external OXYGEN storage.
+
+This establishes the intended boundary:
+
+`environmental resource -> resource network -> organ conversion -> blood -> organ consumption`
+
+The current blood model only carries oxygen. Nutrients, waste, temperature, pressure and volume remain future state dimensions and are not yet simulated.
