@@ -1,0 +1,30 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url = 'https://files.minecraftforge.net/maven' }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+apply plugin: 'forge'
+version = '0.0.4'
+group = 'br.com.augmentation'
+archivesBaseName = 'augmentation-core'
+minecraft {
+    version = '1.7.10-10.13.4.1614-1.7.10'
+    runDir = 'run'
+}
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+repositories { mavenCentral() }
+dependencies { }
+processResources {
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', '1.7.10'
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version': project.version, 'mcversion': '1.7.10'
+    }
+    from(sourceSets.main.resources.srcDirs) { exclude 'mcmod.info' }
+}
