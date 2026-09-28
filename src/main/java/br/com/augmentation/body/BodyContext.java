@@ -27,7 +27,10 @@ public final class BodyContext implements IBodyContext {
     }
 
     public void applyDemand(IResourceDemand demand) {
-        allocated.put(demand.getResourceType().getId(), Integer.valueOf(demand.getProvidedAmount()));
+        String id = demand.getResourceType().getId();
+        Integer old = allocated.get(id);
+        int current = old == null ? 0 : old.intValue();
+        allocated.put(id, Integer.valueOf(current + demand.getProvidedAmount()));
     }
 
     @Override public void provideFunction(String function, int strength) {
