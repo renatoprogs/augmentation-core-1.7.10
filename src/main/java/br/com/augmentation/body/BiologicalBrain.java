@@ -29,15 +29,13 @@ public final class BiologicalBrain implements IOrgan {
 
     @Override
     public void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands) {
-        ResourceDemandProfile demand = profile.getOxygenDemand();
-        demands.add(new ResourceDemand(demand.getResourceType(),
-                demand.getRequestedAmount(), demand.getPriority()));
+        // Brain oxygen is supplied through the internal blood medium.
     }
 
     @Override
     public void tick(IBodyContext context) {
         ResourceDemandProfile demand = profile.getOxygenDemand();
-        int oxygen = context.requestResource(demand.getResourceType(), demand.getRequestedAmount());
+        int oxygen = context.getBloodSystem().consumeOxygen(demand.getRequestedAmount());
         int pressure = Math.round(context.getPressure() * profile.getPressureScale());
         int function = oxygen == demand.getRequestedAmount()
                 && pressure >= profile.getStressPressureThreshold()
