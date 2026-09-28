@@ -8,6 +8,7 @@ import java.util.Map;
 import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBody;
 import br.com.augmentation.api.IOrgan;
+import br.com.augmentation.api.IOrganStatePersistence;
 import br.com.augmentation.api.IResourceEfficiencySource;
 import br.com.augmentation.api.IResourceDemand;
 import br.com.augmentation.api.environment.IEnvironment;
@@ -15,6 +16,7 @@ import br.com.augmentation.resource.EnvironmentResourceProvider;
 import br.com.augmentation.resource.ResourceNetwork;
 import br.com.augmentation.resource.ResourceStorage;
 import br.com.augmentation.resource.ResourceType;
+import br.com.augmentation.forge.v1_7_10.nbt.OrganStateNBTAdapter;
 import net.minecraft.nbt.NBTTagCompound;
 
 public final class Body implements IBody {
@@ -23,6 +25,7 @@ public final class Body implements IBody {
     private final ResourceStorage energy = new ResourceStorage(ResourceType.ENERGY, 1000, 1000);
     private final BloodSystem blood = new BloodSystem(20);
     private final EnvironmentResourceProvider oxygenProvider = new EnvironmentResourceProvider(ResourceType.OXYGEN, 2);
+    private final IOrganStatePersistence organStatePersistence = new OrganStateNBTAdapter();
     private int tickCount;
     private CollapseState collapseState = CollapseState.NORMAL;
 
@@ -131,7 +134,7 @@ public final class Body implements IBody {
         NBTTagCompound organsNbt = new NBTTagCompound();
         for (Map.Entry<String, IOrgan> entry : organs.entrySet()) {
             NBTTagCompound organNbt = new NBTTagCompound();
-            entry.getValue().writeToNBT(organNbt);
+            organStatePersistence.writeState(entry.getValue(), organNbt);
             organsNbt.setTag(entry.getKey(), organNbt);
         }
         nbt.setTag("organs", organsNbt);
@@ -150,7 +153,7 @@ public final class Body implements IBody {
             NBTTagCompound organsNbt = nbt.getCompoundTag("organs");
             for (Map.Entry<String, IOrgan> entry : organs.entrySet()) {
                 if (organsNbt.hasKey(entry.getKey(), 10)) {
-                    entry.getValue().readFromNBT(organsNbt.getCompoundTag(entry.getKey()));
+                    organStatePersistence.readState(entry.getValue(), organsNbt.getCompoundTag(entry.getKey()));
                 }
             }
         }
