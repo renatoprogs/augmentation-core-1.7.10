@@ -2,28 +2,37 @@
 
 Experimental modular augmentation framework for Minecraft 1.7.10 / Forge 10.13.4.1614.
 
-## 0.0.7 — Data-oriented physiology
+## 0.0.8 — Data-driven resource extraction
 
-The physiology layer now separates data from calculation.
+Environmental resource production is now affected by an explicit efficiency supplied by a generic data source.
 
 WORLD -> IEnvironment -> EnvironmentResourceProvider -> ResourceNetwork -> Storage -> Consumers
+                                      ^
+                                      |
+                         IResourceEfficiencySource
 
-ORGAN STATE + ENVIRONMENT DATA -> PhysiologyModel -> FUNCTION/STRESS
+ORGAN STATE + ENVIRONMENT DATA -> PhysiologyModel -> EXTRACTION EFFICIENCY
 
-### Data-oriented boundary
+### Data-oriented status
 
-PhysiologyProfile contains experimental thresholds and coefficients. PhysiologyModel contains pure calculations over those inputs. BiologicalLungs owns organ state and delegates calculations to the model.
+- Resource production is separated from the world adapter.
+- Extraction efficiency is an explicit data input.
+- Lung physiology is calculated by a pure model.
+- The provider does not depend directly on lungs; it consumes the generic IResourceEfficiencySource contract.
+- The body connects compatible organ data to the resource provider.
+- Physiological thresholds and coefficients remain in PhysiologyProfile.
+- The same contract can later be supplied by cybernetic lungs, filters, suits, enchantments or other systems without changing the environment provider.
 
-This removes the main physiological threshold literals from the organ tick. The current defaults remain experimental gameplay parameters, not biological constants.
+The project is still partially data-oriented. ResourceNetwork.request() does not yet resolve consumer priority, and some organ behavior still contains fixed gameplay values.
 
-### Architecture status
+### Current extraction model
 
-The core is partially data-oriented, not fully data-oriented yet. The resource network separates providers, consumers and storage, but ResourceNetwork.request() still ignores consumer priority during allocation. Several organ behaviors also still contain fixed values.
+For the current experimental profile:
 
-The environment adapter remains responsible for translating world conditions into resources; Body no longer calls environment extraction directly.
+extraction_efficiency = f(pressure, mean(integrity, stability))
 
-### Important limitation
+The result is expressed as a percentage and applied to the environmental resource before it enters the network.
 
-The lungs are still a physiological function processor, not a true oxygen extractor. The environment provider currently supplies a bounded OXYGEN amount per tick before physiological processing. The next resource step should make extraction efficiency affect how much environmental resource becomes available to the network.
+This is an experimental gameplay model, not a biological claim.
 
 A successful repository commit does not imply that the project has been compiled against a local Forge 1.7.10 installation.
