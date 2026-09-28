@@ -2,7 +2,7 @@
 
 Experimental modular augmentation framework for Minecraft 1.7.10 / Forge 10.13.4.1614.
 
-## 0.0.9 — Resource demand and physiology profiles
+## 0.0.10 — Resource demand, physiology and persistent state
 
 Resource consumption is represented explicitly as demands before organ execution.
 
@@ -85,9 +85,9 @@ A successful repository commit does not imply that the project has been compiled
 
 The project version and the persisted NBT schema version are tracked separately.
 
-- **Mod version:** `0.0.9` (declared in `build.gradle` and expanded into `mcmod.info`).
+- **Mod version:** `0.0.10` (declared in `build.gradle` and expanded into `mcmod.info`).
 - **Minecraft target:** `1.7.10` / Forge `10.13.4.1614`.
-- **NBT schema:** `9` (`Body.writeToNBT()`), which identifies the persistence layout and is **not** the mod release number.
+- **NBT schema:** `10` (`Body.writeToNBT()`), which identifies the persistence layout and is **not** the mod release number.
 - A change that alters the public/runtime contract should receive a new mod version before the next feature is merged.
 - A persistence-layout change should increment the NBT schema independently and include a migration/compatibility decision in the same change.
 
