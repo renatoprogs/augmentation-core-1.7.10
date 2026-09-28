@@ -2,6 +2,7 @@ package br.com.augmentation.body;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IResourceNetwork;
 import br.com.augmentation.api.IResourceStorage;
