@@ -1,7 +1,7 @@
 package br.com.augmentation.body;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ import br.com.augmentation.resource.ResourceType;
 import net.minecraft.nbt.NBTTagCompound;
 
 public final class Body implements IBody {
-    private final Map<String, IOrgan> organs = new HashMap<String, IOrgan>();
+    private final Map<String, IOrgan> organs = new LinkedHashMap<String, IOrgan>();
     private final ResourceStorage oxygen = new ResourceStorage(ResourceType.OXYGEN, 100, 100);
     private final ResourceStorage energy = new ResourceStorage(ResourceType.ENERGY, 1000, 1000);
     private final BloodSystem blood = new BloodSystem(20);
