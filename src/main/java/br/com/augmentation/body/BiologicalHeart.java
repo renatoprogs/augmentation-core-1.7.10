@@ -25,6 +25,7 @@ public final class BiologicalHeart implements IOrgan {
     @Override public int getIntegrity() { return integrity; }
     @Override public int getStability() { return stability; }
     @Override public int getStress() { return stress; }
+    @Override public int getMaximumStress() { return profile.getMaximumStress(); }
 
     @Override
     public void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands) {
