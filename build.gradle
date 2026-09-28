@@ -18,7 +18,9 @@ minecraft {
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 repositories { mavenCentral() }
-dependencies { }
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
 processResources {
     inputs.property 'version', project.version
     inputs.property 'mcversion', '1.7.10'
