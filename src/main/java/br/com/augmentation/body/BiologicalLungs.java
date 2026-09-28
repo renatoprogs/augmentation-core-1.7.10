@@ -16,7 +16,7 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
     private int stability = 100;
     private int stress;
 
-    public BiologicalLungs() { this(PhysiologyProfile.defaultProfile()); }
+    public BiologicalLungs() { this(PhysiologyProfile.defaultLungProfile()); }
     public BiologicalLungs(PhysiologyProfile profile) { this.profile = profile; }
 
     @Override public String getId() { return "lungs"; }
