@@ -97,3 +97,19 @@ Original project:
 
 The MIT attribution is retained in this repository's LICENSE file. This project
 does not imply endorsement by Flaxbeard or the original Cyberware team.
+
+
+## 0.0.9.x — physiological collapse
+
+The physiology layer now distinguishes four experimental systemic states:
+
+- NORMAL
+- STRAIN
+- FAILURE
+- COLLAPSE
+
+CollapseModel is a pure calculation layer. It combines stress, integrity and stability instead of treating collapse as a single counter. Each organ exposes its configured maximum stress, so the normalization remains data-driven.
+
+The current thresholds are gameplay placeholders for testing the state-space transition and are not intended as biological claims.
+
+Systemic body state is derived from the most severe current organ state and persisted in NBT. This is intentionally a small first step; blood/internal transport will be introduced separately rather than making blood equivalent to external resources.
