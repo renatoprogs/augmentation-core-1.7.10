@@ -2,10 +2,10 @@ package br.com.augmentation.body;
 
 import java.util.List;
 
+import br.com.augmentation.api.IBloodDemand;
 import br.com.augmentation.api.IBodyContext;
 import br.com.augmentation.api.IOrgan;
 import br.com.augmentation.api.IResourceDemand;
-import br.com.augmentation.resource.ResourceDemand;
 
 public final class BiologicalHeart implements IOrgan {
     private final PhysiologyProfile profile;
@@ -33,9 +33,15 @@ public final class BiologicalHeart implements IOrgan {
     }
 
     @Override
+    public void collectBloodDemands(IBodyContext context, List<IBloodDemand> demands) {
+        ResourceDemandProfile demand = profile.getOxygenDemand();
+        demands.add(new BloodDemand(getId(), demand.getRequestedAmount(), demand.getPriority()));
+    }
+
+    @Override
     public void tick(IBodyContext context) {
         ResourceDemandProfile demand = profile.getOxygenDemand();
-        int oxygen = context.getBloodSystem().consumeOxygen(demand.getRequestedAmount());
+        int oxygen = context.getBloodOxygen(getId());
         int function = oxygen == demand.getRequestedAmount()
                 ? profile.getFunctionAtFullCondition()
                 : profile.getFunctionAtFailure();
