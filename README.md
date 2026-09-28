@@ -49,6 +49,9 @@ PhysiologyProfile now carries both resource-demand parameters and function/stres
 - stress threshold;
 - stress increase/recovery;
 - maximum stress;
+- wear threshold/increase;
+- stability threshold/decrease/recovery;
+- wear-to-integrity scaling;
 - function output at full/failure;
 - oxygen demand profile.
 
@@ -66,7 +69,7 @@ Separate default profiles allow different organs to share the same data model wi
 - The body connects compatible organ data to the resource provider.
 - Demand profiles can later be supplied by cybernetic organs, filters, suits, enchantments or other systems without changing the resource network.
 
-The project is still partially data-oriented. ResourceNetwork.request() is an execution-phase extraction method and does not itself resolve priority; priority is resolved by allocate(). Organ state such as integrity and stability remains runtime state. Some defaults are still constructed in Java and can later move to external data/configuration.
+The project is still partially data-oriented. ResourceNetwork.request() is an execution-phase extraction method and does not itself resolve priority; priority is resolved by allocate(). Organ physiological state is explicit runtime state and is now persisted through the organ NBT contract. Some defaults are still constructed in Java and can later move to external data/configuration.
 
 ### Current extraction model
 
