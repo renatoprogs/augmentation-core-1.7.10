@@ -1,6 +1,5 @@
 package br.com.augmentation.api;
 
-public interface IResourceConsumer {
-    IResourceType getResourceType();
+public interface IResourceConsumer extends IResourceNode {
     int getConsumptionPerTick();
 }
