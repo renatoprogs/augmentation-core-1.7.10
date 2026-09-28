@@ -9,5 +9,6 @@ public interface IOrgan {
     int getStress();
     int getMaximumStress();
     void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands);
+    void collectBloodDemands(IBodyContext context, List<IBloodDemand> demands);
     void tick(IBodyContext context);
 }
