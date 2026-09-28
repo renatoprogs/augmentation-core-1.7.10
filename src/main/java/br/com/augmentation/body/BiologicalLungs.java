@@ -59,6 +59,10 @@ public final class BiologicalLungs implements IOrgan, IResourceEfficiencySource 
         int processing = PhysiologyModel.oxygenProcessing(pressure, condition, profile);
         context.provideFunction("oxygen_processing", processing);
         context.provideFunction("oxygen_storage", context.getBloodSystem().getOxygen());
-        stress = PhysiologyModel.nextStress(stress, pressure, profile);
+        stress = PhysiologyModel.nextStress(
+                stress,
+                pressure,
+                oxygen == demand.getRequestedAmount(),
+                profile);
     }
 }
