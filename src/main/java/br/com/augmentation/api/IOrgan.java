@@ -7,6 +7,9 @@ public interface IOrgan {
     int getIntegrity();
     int getStability();
     int getStress();
+    int getWear();
+    void writeToNBT(net.minecraft.nbt.NBTTagCompound nbt);
+    void readFromNBT(net.minecraft.nbt.NBTTagCompound nbt);
     int getMaximumStress();
     void collectResourceDemands(IBodyContext context, List<IResourceDemand> demands);
     void collectBloodDemands(IBodyContext context, List<IBloodDemand> demands);
