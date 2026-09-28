@@ -124,3 +124,31 @@ This establishes the intended boundary:
 `environmental resource -> resource network -> organ conversion -> blood -> organ consumption`
 
 The current blood model only carries oxygen. Nutrients, waste, temperature, pressure and volume remain future state dimensions and are not yet simulated.
+
+
+## Internal blood allocation
+
+The internal blood medium now has its own demand/allocation phase, separate from the external resource network.
+
+The current cycle is:
+
+```text
+External environment
+      ↓
+ResourceNetwork
+      ↓
+Lungs
+      ↓
+BloodSystem
+      ↓
+BloodDemand[] + priority allocation
+      ↓
+Brain / Heart
+      ↓
+Stress / Failure / Collapse
+```
+
+Blood oxygen is finite. Each organ declares an internal oxygen demand with a priority, and the blood system allocates the available oxygen deterministically: higher priority first, then consumer id as a stable tie-breaker. The allocation is consumed from the blood pool immediately and the provided amount is exposed to the organ through the body context.
+
+This is intentionally limited to oxygen. Nutrients, waste, temperature, pressure and volume remain future extensions until the oxygen conservation loop is validated.
+
