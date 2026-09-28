@@ -4,6 +4,12 @@ All notable project changes are recorded here by mod version. Persistence schema
 
 ## 0.0.10 — current
 
+### Persistence boundary
+- Removed Minecraft NBT types from the `IOrgan` Core contract.
+- Added `IPhysiologyState` as the Core physiological-state contract.
+- Added `IOrganStatePersistence` and a Forge 1.7.10 `OrganStateNBTAdapter`.
+- Kept NBT schema **10** because the persisted layout is unchanged.
+
 ### Physiological state progression
 - Added accumulated wear as a separate state from acute stress.
 - Added stability degradation/recovery driven by physiological load.
